@@ -1,0 +1,8 @@
+# Output
+out.pac
+
+# Python
+__pycache__/
+
+# Other
+tmp*
