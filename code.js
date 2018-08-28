@@ -20,7 +20,7 @@ function belongsToSubnet(host, list) {
 
   // Match
   var masked = ip & list[x][1];
-  return (masked >>> 0) == (list[x][0] >>> 0);
+  return (masked ^ list[x][0]) == 0;
 }
 
 var proxy = "__PROXY__";
