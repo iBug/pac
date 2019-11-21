@@ -1,5 +1,9 @@
 # pac
 
-PAC scripts for proxies.
+PAC scripts for proxies
 
-To generate PAC from the latest IP range list, run `./build.sh` (make sure you have `wget` and Python 3 available).
+## 使用
+
+为了方便大家生成与使用，我制作了一个网页版的生成器：<https://ibugone.com/cn/pac-generator>，可以直接在线生成并下载。
+
+网页生成器的源代码[在这](https://github.com/iBug/iBug-source/blob/master/_cn/pac-generator.md)，同时本仓库中的代码停止维护。

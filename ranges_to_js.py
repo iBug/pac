@@ -18,6 +18,6 @@ data = [(ip_to_num(s), n_to_mask(int(n))) for s, n in pairs]
 data = sorted(data, key=lambda x: x[0])
 
 out = ",\n".join(["  [{}, {}]".format(to_upper_hex(a), to_upper_hex(b)) for a, b in data])
-out = "var WHITELIST = [\n" + out + "\n];"
+out = "var CHINA = [\n" + out + "\n];"
 
 print(out)

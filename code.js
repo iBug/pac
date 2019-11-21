@@ -23,18 +23,31 @@ function belongsToSubnet(host, list) {
   return (masked ^ list[x][0]) == 0;
 }
 
-var proxy = "__PROXY__";
-var direct = "DIRECT";
+function isChina(host) {
+  return belongsToSubnet(host, CHINA);
+}
+
+function isLan(host) {
+  return belongsToSubnet(host, LAN);
+}
 
 function FindProxyForURL(url, host) {
   var remote = dnsResolve(host);
-  if (belongsToSubnet(remote, WHITELIST)) {
-      return direct;
+  if (isLan(remote) || isChina(remote)) {
+      return "DIRECT";
   }
-  return proxy;
+  return "__PROXY__";
 }
 
 // Format: [Hex IP, mask]
-// e.g. 1.0.1.0/24 = [0x80008000, 0xFFFFFF00]
+// e.g. 1.0.1.0/24 = [0x01000100, 0xFFFFFF00]
 // Source: http://www.ipdeny.com/ipblocks/data/aggregated/cn-aggregated.zone
+
+var LAN = [
+  [0x0A000000, 0xFF000000],
+  [0x7F000000, 0xFFFFFF00],
+  [0xA9FE0000, 0xFFFF0000],
+  [0xAC100000, 0xFFF00000],
+  [0xC0A80000, 0xFFFF0000]
+];
 
