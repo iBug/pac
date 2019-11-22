@@ -27,6 +27,9 @@ var proxy = "__PROXY__";
 var direct = "DIRECT";
 
 function FindProxyForURL(url, host) {
+  if (!isResolvable(host)) {
+      return proxy;
+  }
   var remote = dnsResolve(host);
   if (belongsToSubnet(remote, WHITELIST)) {
       return direct;
