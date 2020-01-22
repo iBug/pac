@@ -1,4 +1,5 @@
-// Author: iBug
+// Author: iBug <ibugone.com>
+// Time: @@TIME@@
 
 function belongsToSubnet(host, list) {
   var ip = host.split(".");
@@ -31,20 +32,23 @@ function isLan(host) {
   return belongsToSubnet(host, LAN);
 }
 
+var proxy = "__PROXY__";
+var direct = "DIRECT";
+// Attempt to catch Shadowsocks-Windows 4.1.9
+if (typeof __PROXY__ !== "undefined") {
+  proxy = __PROXY__;
+}
+
 function FindProxyForURL(url, host) {
   if (!isResolvable(host)) {
-      return proxy;
+    return proxy;
   }
   var remote = dnsResolve(host);
   if (isLan(remote) || isChina(remote)) {
-      return "DIRECT";
+    return direct;
   }
-  return "__PROXY__";
+  return proxy;
 }
-
-// Format: [Hex IP, mask]
-// e.g. 1.0.1.0/24 = [0x01000100, 0xFFFFFF00]
-// Source: http://www.ipdeny.com/ipblocks/data/aggregated/cn-aggregated.zone
 
 var LAN = [
   [0x0A000000, 0xFF000000],
