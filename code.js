@@ -34,10 +34,6 @@ function isLan(host) {
 
 var proxy = "__PROXY__";
 var direct = "DIRECT";
-// Attempt to catch Shadowsocks-Windows 4.1.9
-if (typeof __PROXY__ !== "undefined") {
-  proxy = __PROXY__;
-}
 
 function FindProxyForURL(url, host) {
   if (!isResolvable(host)) {
