@@ -2,9 +2,8 @@
 // Time: @@TIME@@
 
 function belongsToSubnet(host, list) {
-  var ip = host.split(".");
-  ip = 0x1000000 * Number(ip[0]) + 0x10000 * Number(ip[1]) +
-    0x100 * Number(ip[2]) + Number(ip[3]);
+  var ip = host.split(".").map(Number);
+  ip = 0x1000000 * ip[0] + 0x10000 * ip[1] + 0x100 * ip[2] + ip[3];
 
   if (ip < list[0][0])
     return false;
