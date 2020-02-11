@@ -35,10 +35,11 @@ var proxy = "__PROXY__";
 var direct = "DIRECT";
 
 function FindProxyForURL(url, host) {
-  if (!isResolvable(host)) {
+  var remote = dnsResolve(host);
+  if (!remote || remote.indexOf(":") !== -1) {
+    // resolution failed or is IPv6 addr
     return proxy;
   }
-  var remote = dnsResolve(host);
   if (isLan(remote) || isChina(remote)) {
     return direct;
   }
