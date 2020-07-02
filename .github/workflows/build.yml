@@ -23,4 +23,3 @@ jobs:
         git -c user.name=GitHub -c user.email=noreply@github.com commit \
           -m "Auto build from GitHub Actions run ${GITHUB_RUN_NUMBER}"
         git push
-        popd &>/dev/null
