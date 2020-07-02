@@ -1,0 +1,26 @@
+name: build
+
+on:
+  push:
+    branches:
+      - master
+  schedule:
+    - cron: "0 12 * * 6"  # 4 AM CST every Saturday
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v1
+    - name: Prepare build
+      run:
+        git clone --branch=dist "https://${GITHUB_ACTOR}:${{ secrets.GITHUB_TOKEN }}@github.com/${GITHUB_REPOSITORY}.git" dist
+    - run: python3 build.py
+    - name: Push back to GitHub
+      run: |
+        cd dist
+        git add --all
+        git -c user.name=GitHub -c user.email=noreply@github.com commit \
+          -m "Auto build from GitHub Actions run ${GITHUB_RUN_NUMBER}"
+        git push
+        popd &>/dev/null
