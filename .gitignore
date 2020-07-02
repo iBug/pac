@@ -1,5 +1,6 @@
 # Output
-out.pac
+*.pac
+dist/
 
 # Python
 __pycache__/
