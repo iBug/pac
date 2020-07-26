@@ -5,21 +5,29 @@ on:
     branches:
       - master
   schedule:
-    - cron: "0 12 * * 6"  # 4 AM CST every Saturday
+    - cron: "0 20 * * 5"  # 4 AM CST every Saturday
 
 jobs:
   build:
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v1
-    - name: Prepare build
-      run:
-        git clone --branch=dist "https://${GITHUB_ACTOR}:${{ secrets.GITHUB_TOKEN }}@github.com/${GITHUB_REPOSITORY}.git" dist
     - run: python3 build.py
-    - name: Push back to GitHub
-      run: |
-        cd dist
-        git add --all
-        git -c user.name=GitHub -c user.email=noreply@github.com commit \
-          -m "Auto build from GitHub Actions run ${GITHUB_RUN_NUMBER}"
-        git push
+    - name: Generate release info
+      id: release-info
+      run: python3 release-info.py
+      env:
+        TZ: Asia/Shanghai
+    - uses: actions/create-release@v1
+      id: create_release
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      with:
+        tag_name: ${{ steps.release-info.outputs.tag_name }}
+        release_name: ${{ steps.release-info.outputs.release_name }}
+        body_path: ${{ steps.release-info.outputs.body_path }}
+    - uses: csexton/release-asset-action@v2
+      with:
+        github-token: ${{ secrets.GITHUB_TOKEN }}
+        pattern: 'dist/*'
+        release-url: ${{ steps.create_release.outputs.upload_url }}

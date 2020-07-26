@@ -36,8 +36,7 @@ def main():
         code = f.read()
     code = code.replace("@@TIME@@", now.isoformat()[:-7])
 
-    if not os.path.exists(OUT_DIR):
-        os.mkdir(OUT_DIR, mode=0o755)
+    os.makedirs(OUT_DIR, mode=0o755, exist_ok=True)
     for key in SOURCES:
         print(f"Generating PAC script from source {key}")
         try:
