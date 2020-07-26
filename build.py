@@ -45,7 +45,7 @@ def main():
             continue
         except HTTPError:
             continue
-        filename = f"pac-{date}-{key}.txt"
+        filename = f"pac-{key}.txt"
         with open(os.path.join(OUT_DIR, filename), "w") as f:
             f.write(code)
             f.write(data)

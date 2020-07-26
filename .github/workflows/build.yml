@@ -5,7 +5,7 @@ on:
     branches:
       - master
   schedule:
-    - cron: "0 20 * * 5"  # 4 AM CST every Saturday
+    - cron: "0 12 * * 6"  # 8 PM CST every Saturday
 
 jobs:
   build:
@@ -16,8 +16,6 @@ jobs:
     - name: Generate release info
       id: release-info
       run: python3 release-info.py
-      env:
-        TZ: Asia/Shanghai
     - uses: actions/create-release@v1
       id: create_release
       env:

@@ -1,4 +1,5 @@
 # Output
+release-info.md
 *.pac
 dist/
 

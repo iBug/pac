@@ -4,7 +4,7 @@ PAC scripts for proxies
 
 ## 使用
 
-获取方式：[本仓库的 `dist` 分支](https://github.com/iBug/pac/tree/dist)
+获取方式：[本仓库的 Releases](https://github.com/iBug/pac/releases/latest)
 
 每周六 12:00 (UTC) 会自动使用 GitHub Actions 运行[生成脚本](build.py)从数据源获取 IP 地址列表并生成 PAC 文件。
 
