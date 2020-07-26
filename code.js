@@ -28,7 +28,7 @@ function belongsToSubnet(host, list) {
 
 function hasMatchedPattern(text, patterns) {
   for (var i = 0; i < patterns.length; i++) {
-    if (shExpMatch(text, patterns[i])
+    if (shExpMatch(text, patterns[i]))
       return true;
   }
   return false;

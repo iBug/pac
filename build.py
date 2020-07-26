@@ -61,7 +61,7 @@ def main():
             f.write(data)
             f.write("\n")
             f.write(gfwlist_stub)
-        with open(os.path.join(OUT_DIR, filename), "w") as f:
+        with open(os.path.join(OUT_DIR, filename_gfwlist), "w") as f:
             f.write(code)
             f.write(data)
             f.write("\n")
