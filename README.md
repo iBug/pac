@@ -8,6 +8,8 @@ PAC scripts for proxies
 
 每周六 12:00 (UTC) 会自动使用 GitHub Actions 运行[生成脚本](build.py)从数据源获取 IP 地址列表并生成 PAC 文件。
 
+本代码是为 Shadowsocks Windows 4.1.9 及以上版本设计的，若要在旧版本中使用请手动修改一处字符串，详情见 [shadowsocks-windows#2761](https://github.com/shadowsocks/shadowsocks-windows/issues/2761)。
+
 ## 贡献
 
 本项目包含两部分

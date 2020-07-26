@@ -31,7 +31,7 @@ function isLan(host) {
   return belongsToSubnet(host, LAN);
 }
 
-var proxy = "__PROXY__";
+var proxy = __PROXY__;
 var direct = "DIRECT";
 
 function FindProxyForURL(url, host) {
