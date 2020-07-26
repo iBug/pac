@@ -6,12 +6,17 @@ import ipaddress
 import requests
 from requests.exceptions import RequestException, HTTPError
 
+import gfwlist
+
 
 SOURCES = {
     'ipdeny.com': 'http://www.ipdeny.com/ipblocks/data/aggregated/cn-aggregated.zone',
     '17mon': 'https://raw.githubusercontent.com/17mon/china_ip_list/master/china_ip_list.txt',
 }
 OUT_DIR = "dist"
+
+# Stub content to disable GFWList check
+GFWLIST_STUB = "var DOMAINS = {};\nvar BLACKPAT = [];\nvar WHITEPAT = [];\n"
 
 
 def fetch_and_convert(src):
@@ -36,6 +41,9 @@ def main():
         code = f.read()
     code = code.replace("@@TIME@@", now.isoformat()[:-7])
 
+    gfwlist_part = gfwlist.generate_pac_partial()
+    gfwlist_stub = GFWLIST_STUB
+
     os.makedirs(OUT_DIR, mode=0o755, exist_ok=True)
     for key in SOURCES:
         print(f"Generating PAC script from source {key}")
@@ -45,10 +53,19 @@ def main():
             continue
         except HTTPError:
             continue
+
         filename = f"pac-{key}.txt"
+        filename_gfwlist = f"pac-gfwlist-{key}.txt"
         with open(os.path.join(OUT_DIR, filename), "w") as f:
             f.write(code)
             f.write(data)
+            f.write("\n")
+            f.write(gfwlist_stub)
+        with open(os.path.join(OUT_DIR, filename), "w") as f:
+            f.write(code)
+            f.write(data)
+            f.write("\n")
+            f.write(gfwlist_part)
 
 
 if __name__ == '__main__':

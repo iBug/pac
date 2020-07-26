@@ -1,6 +1,9 @@
 // Author: iBug <ibugone.com>
 // Time: @@TIME@@
 
+var proxy = __PROXY__;
+var direct = "DIRECT";
+
 function belongsToSubnet(host, list) {
   var ip = host.split(".").map(Number);
   ip = 0x1000000 * ip[0] + 0x10000 * ip[1] + 0x100 * ip[2] + ip[3];
@@ -23,6 +26,38 @@ function belongsToSubnet(host, list) {
   return (masked ^ list[x][0]) == 0;
 }
 
+function hasMatchedPattern(text, patterns) {
+  for (var i = 0; i < patterns.length; i++) {
+    if (shExpMatch(text, patterns[i])
+      return true;
+  }
+  return false;
+}
+
+function checkDomainType(host) {
+  // Check if a domain is blacklisted or whitelisted
+  var segments = host.split(".").reverse();
+  var ptr = DOMAINS;
+  var type = DOMAINS["@"];
+  for (var i = 0; i < segments.length; i++) {
+    var segment = segments[i];
+    ptr = ptr[segment];
+    if (ptr === undefined)
+      break;
+    if (ptr["@"] !== undefined)
+      type = ptr["@"];
+  }
+  return type;
+}
+
+function hasWhitelistedPattern(url) {
+  return hasMatchedPattern(url, WHITEPAT);
+}
+
+function hasBlacklistedPattern(url) {
+  return hasMatchedPattern(url, BLACKPAT);
+}
+
 function isChina(host) {
   return belongsToSubnet(host, CHINA);
 }
@@ -31,10 +66,21 @@ function isLan(host) {
   return belongsToSubnet(host, LAN);
 }
 
-var proxy = "__PROXY__";
-var direct = "DIRECT";
-
 function FindProxyForURL(url, host) {
+  if (hasWhitelistedPattern(url)) {
+    return direct;
+  }
+  if (hasBlacklistedPattern(url)) {
+    return proxy;
+  }
+  var domainType = checkDomainType(host);
+  if (domainType === 0) {
+    return proxy;
+  } else if (domainType === 1) {
+    return direct;
+  }
+
+  // Fallback to IP whitelist
   var remote = dnsResolve(host);
   if (!remote || remote.indexOf(":") !== -1) {
     // resolution failed or is IPv6 addr
