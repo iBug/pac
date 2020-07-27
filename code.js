@@ -44,6 +44,8 @@ function checkDomainType(host) {
     ptr = ptr[segment];
     if (ptr === undefined)
       break;
+    if (typeof ptr === "number")
+      return ptr;
     if (ptr["@"] !== undefined)
       type = ptr["@"];
   }

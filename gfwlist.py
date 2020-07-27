@@ -1,18 +1,25 @@
 #!/usr/bin/python3
 
+import os
 import base64
 import json
 import urllib.parse
 import requests
 
 
+GFWLIST_FILE = "gfwlist.txt"
 GFWLIST_URL = 'https://raw.githubusercontent.com/gfwlist/gfwlist/master/gfwlist.txt'
 
 
 def get_gfwlist():
-    r = requests.get(GFWLIST_URL)
-    r.raise_for_status()
-    return base64.b64decode(r.text).decode("utf-8").rstrip("\n")
+    if os.path.isfile(GFWLIST_FILE):
+        with open(GFWLIST_FILE, "r") as f:
+            text = f.read()
+    else:
+        r = requests.get(GFWLIST_URL)
+        r.raise_for_status()
+        text = r.text
+    return base64.b64decode(text).decode("utf-8").rstrip("\n")
 
 
 def update_domains(domains, host, mode=0):
@@ -24,6 +31,19 @@ def update_domains(domains, host, mode=0):
             this[segment] = {}
         this = this[segment]
     this["@"] = mode
+
+
+def postproc_domains(domains):
+    # Turn all {"@": 1} into 1 to save some text
+    keys = list(domains.keys())
+    for key in keys:
+        if key == "@":
+            continue
+        obj = domains[key]
+        if len(obj) == 1 and "@" in obj:
+            domains[key] = obj["@"]
+        else:
+            postproc_domains(obj)
 
 
 def parse_gfwlist(text):
@@ -61,6 +81,7 @@ def parse_gfwlist(text):
                 blackpat.append(line)
             else:
                 whitepat.append(line)
+    postproc_domains(domains)
     return domains, blackpat, whitepat
 
 
