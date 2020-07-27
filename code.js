@@ -1,14 +1,14 @@
-// Author: iBug <ibugone.com>
+// Author: iBug <ibug.io>
+// Source: https://github.com/iBug/pac
 // Time: @@TIME@@
 
 var proxy = __PROXY__;
 var direct = "DIRECT";
 
 function belongsToSubnet(host, list) {
-  var ip = host.split(".").map(Number);
-  ip = 0x1000000 * ip[0] + 0x10000 * ip[1] + 0x100 * ip[2] + ip[3];
+  var ip = convert_addr(host) >>> 0;
 
-  if (ip < list[0][0])
+  if (list.length === 0 || ip < list[0][0])
     return false;
 
   // Binary search
@@ -23,7 +23,7 @@ function belongsToSubnet(host, list) {
 
   // Match
   var masked = ip & list[x][1];
-  return (masked ^ list[x][0]) == 0;
+  return (masked ^ list[x][0]) === 0;
 }
 
 function hasMatchedPattern(text, patterns) {
