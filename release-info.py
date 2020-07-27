@@ -29,7 +29,7 @@ def main():
 
     # Produce the markdown
     with open(RELEASE_MARKDOWN_PATH, "w") as f:
-        body = "This is an automatic release created from [GitHub Actions run {}](https://github.com/{}/actions/runs/{}) on {},".format(
+        body = "This is an automatic release created from [GitHub Actions run {}](https://github.com/{}/actions/runs/{}) on {}.".format(
             os.environ["GITHUB_RUN_NUMBER"],
             os.environ["GITHUB_REPOSITORY"],
             os.environ["GITHUB_RUN_ID"],
