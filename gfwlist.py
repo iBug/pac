@@ -51,7 +51,7 @@ def parse_gfwlist(text):
     blackpat = []  # blacklisted patterns
     whitepat = []  # whitelisted patterns
 
-    for line in text.splitlines():
+    for line in text.splitlines()[1:]:
         if not line.strip() or line.startswith("!"):
             continue  # ignore comments and empty lines
 
