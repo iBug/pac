@@ -43,6 +43,9 @@ def parse_gfwlist(text):
         if line.startswith("||"):
             # domain prefix
             update_domains(domains, line[2:], mode)
+        elif line.startswith("/"):
+            # regex, can't handle yet
+            pass
         else:
             # Keyword pattern
             # Single vertical line at either side means string boundary
