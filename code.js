@@ -15,7 +15,7 @@ function belongsToSubnet(host, list) {
   var x = 0, y = list.length, middle;
   while (y - x > 1) {
     middle = Math.floor((x + y) / 2);
-    if (list[middle][0] < ip)
+    if (list[middle][0] <= ip)
       x = middle;
     else
       y = middle;
