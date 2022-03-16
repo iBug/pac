@@ -12,7 +12,9 @@ jobs:
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v1
-    - run: python3 build.py
+    - run: |
+        python3 build.py
+        gzip -9 dist/*.txt
     - name: Generate release info
       id: release-info
       run: python3 release-info.py
