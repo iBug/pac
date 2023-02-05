@@ -11,23 +11,16 @@ jobs:
   build:
     runs-on: ubuntu-latest
     steps:
-    - uses: actions/checkout@v1
+    - uses: actions/checkout@v3
     - run: |
         python3 build.py
         gzip -9 dist/*.txt
     - name: Generate release info
       id: release-info
       run: python3 release-info.py
-    - uses: actions/create-release@v1
-      id: create_release
-      env:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+    - uses: softprops/action-gh-release@v1
       with:
+        name: ${{ steps.release-info.outputs.release_name }}
         tag_name: ${{ steps.release-info.outputs.tag_name }}
-        release_name: ${{ steps.release-info.outputs.release_name }}
         body_path: ${{ steps.release-info.outputs.body_path }}
-    - uses: csexton/release-asset-action@v2
-      with:
-        github-token: ${{ secrets.GITHUB_TOKEN }}
-        pattern: 'dist/*'
-        release-url: ${{ steps.create_release.outputs.upload_url }}
+        files: 'dist/*'

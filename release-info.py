@@ -6,16 +6,19 @@ import os
 
 
 RELEASE_MARKDOWN_PATH = "release-info.md"
+OUTPUT_TARGET = None
 
 
-def create_output(name, content, target=sys.stdout):
-    print(f"::set-output name={name}::{content}", file=target)
+def create_output(name, content):
+    print(f"{name}={content}", file=OUTPUT_TARGET)
 
 
 def main():
+    global OUTPUT_TARGET
     if "GITHUB_ACTIONS" not in os.environ:
         print("GitHub Actions environment expected but not found, abort.", file=sys.stderr)
         sys.exit(1)
+    OUTPUT_TARGET = open(os.environ["GITHUB_OUTPUT"], "a")
 
     # Credits: https://stackoverflow.com/a/1398742/5958455
     # Depends on os.environ["TZ"]
