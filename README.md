@@ -12,12 +12,34 @@ PAC scripts for proxies
 
 ## 使用
 
+### 方式一：
+
 获取方式：[本仓库的 Releases](https://github.com/iBug/pac/releases/latest)
 
 - `pac-<name>.txt` 包含从数据源 `<name>` 获取的 IP 地址列表（白名单）
 - `pac-gfwlist-<name>.txt` 在 IP 白名单的基础上添加了 GFWList 的匹配
 
 本代码是为 Shadowsocks Windows 4.1.9 及以上版本设计的，若要在旧版本或使用其他代理软件中使用，请手动修改文件第 5 行 `__PROXY__` 为你的代理地址，详情见 [shadowsocks-windows#2761](https://github.com/shadowsocks/shadowsocks-windows/issues/2761)。
+
+### 方式二：
+
+在线使用。引用dist目录中的文件的raw链接。或者使用其镜像加速链接（推荐）。如：
+
+Github Raw: https://raw.githubusercontent.com/{GITHUB_USERNAME}/pac/master/dist/pac-gfwlist-17mon.txt
+
+FastGit: https://raw.fastgit.org/{GITHUB_USERNAME}/pac/master/dist/pac-gfwlist-17mon.txt
+
+### 方式三：
+
+在自己的github托管使用。
+
+1. fork
+
+2. 修改权限。给action读写权限
+
+3. 添加action变量`PAC_PROXY`。位于 settings > secrets and variables > actions 。值如：SOCKS5 127.0.0.1:7890
+
+这样就有了一个自己随意搞的在线PAC。 
 
 ## 贡献
 
