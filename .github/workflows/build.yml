@@ -6,6 +6,7 @@ on:
       - master
   schedule:
     - cron: "0 12 * * 6"  # 8 PM CST every Saturday
+  workflow_dispatch:
 
 permissions:
   contents: write
