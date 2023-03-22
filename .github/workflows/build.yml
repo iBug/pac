@@ -19,7 +19,7 @@ jobs:
     - run: |
         sed -i '1,10 s/__PROXY__/${{ vars.PAC_PROXY }}/g' code.js  # 使用action 仓库变量，配置常变参数
         python3 build.py
-        gzip -9 dist/*.txt
+        gzip -9 -k dist/*.txt
     - name: Generate release info
       id: release-info
       run: python3 release-info.py
@@ -35,9 +35,9 @@ jobs:
     - name: Push dist files
       run: |
         set -x
-        sed -i 's/{REPO}/${{ github.repository }}/' README.md # 当别人fork后，README 信息自动变更到他自己的仓库
-        sed -i '/TIME/d' dist/*.txt  # 剔除日期变更，忽略仅仅因为日期变更而出现的提交
-        git add -f -A dist/*.txt
+        sed -i 's#__REPO__#${{ github.repository }}#g' README.md # 当别人fork后，README 信息自动变更到他自己的仓库
+        sed -i '/Time:/d' dist/*.txt  # 剔除日期变更，忽略仅仅因为日期变更而出现的提交
+        git add -f -A dist/*.txt README.md
         git commit -m "[$(LANG=C date)] auto update" || exit 0
         [ -n "${{ secrets.READ_ONLY }}" ] && git show && exit 0
         git push origin master

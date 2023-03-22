@@ -1,6 +1,6 @@
 # pac
 
-![](https://github.com/{REPO}/actions/workflows/build.yml/badge.svg)
+![](https://github.com/__REPO__/actions/workflows/build.yml/badge.svg)
 
 PAC scripts for proxies
 
@@ -27,9 +27,9 @@ PAC scripts for proxies
 
 在线使用。引用dist目录中的文件的raw链接。或者使用其镜像加速链接（推荐）。如：
 
-Github Raw: https://raw.githubusercontent.com/{REPO}/master/dist/pac-gfwlist-17mon.txt
+Github Raw: https://raw.githubusercontent.com/__REPO__/master/dist/pac-gfwlist-17mon.txt
 
-FastGit: https://raw.fastgit.org/{REPO}/master/dist/pac-gfwlist-17mon.txt
+FastGit: https://raw.fastgit.org/__REPO__/master/dist/pac-gfwlist-17mon.txt
 
 ### 方式三：
 
