@@ -27,3 +27,14 @@ jobs:
         tag_name: ${{ steps.release-info.outputs.tag_name }}
         body_path: ${{ steps.release-info.outputs.body_path }}
         files: 'dist/*'
+    - uses: petronny/git-config-user@master
+      with:
+        path: .
+    - name: Push dist files
+      run: |
+        set -x
+        sed -i '/TIME/d' dist/*.txt  # 剔除日期变更，忽略仅仅因为日期变更而出现的提交
+        git add -f -A dist/*.txt
+        git commit -m "[$(LANG=C date)] auto update" || exit 0
+        [ -n "${{ secrets.READ_ONLY }}" ] && git show && exit 0
+        git push origin master
