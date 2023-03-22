@@ -16,6 +16,7 @@ jobs:
     steps:
     - uses: actions/checkout@v3
     - run: |
+        sed -i '1,10 s/__PROXY__/${{ vars.PAC_PROXY }}/g' code.js  # 使用action 仓库变量，配置常变参数
         python3 build.py
         gzip -9 dist/*.txt
     - name: Generate release info
