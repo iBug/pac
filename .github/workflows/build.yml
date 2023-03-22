@@ -34,6 +34,7 @@ jobs:
     - name: Push dist files
       run: |
         set -x
+        sed -i 's/{REPO}/${{ github.repository }}/' README.md # 当别人fork后，README 信息自动变更到他自己的仓库
         sed -i '/TIME/d' dist/*.txt  # 剔除日期变更，忽略仅仅因为日期变更而出现的提交
         git add -f -A dist/*.txt
         git commit -m "[$(LANG=C date)] auto update" || exit 0
