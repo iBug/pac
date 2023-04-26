@@ -32,14 +32,6 @@ function convertToInt(high, low) {
   return parseInt(high + low, 16);
 }
 
-function isLan_Internal6(parts) {
-  var num = convertToInt(parts[0], parts[1]);
-  var list = LAN6;
-  var x = binarySearch(list, num, 0, list.length);
-  
-  return ((num & list[x][1]) === list[x][0]);
-}
-
 function isInNet6(parts, list, list2) {
   var num = convertToInt(parts[0], parts[1]);
   var x = binarySearch(list, num, 0, list.length);
