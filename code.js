@@ -19,45 +19,43 @@ function binarySearch(list, num, lower, upper) {
   return x;
 }
 
-function fixLength(text) {
-  if (text.length == 1) return "000" + text;
-  if (text.length == 2) return "00" + text;
-  if (text.length == 3) return "0" + text;
-  return text;
-}
-
-function convertToInt(high, low) {
-  if (low.length != 4) 
-    return parseInt(high + fixLength(low), 16);
-  return parseInt(high + low, 16);
+function convertToInt6(high, low) {
+  var num1 = parseInt(high, 16) & 0xFFFF;
+  var num2 = parseInt(low, 16) & 0xFFFF;
+  return (((num1 << 16) | num2) >>> 0);
 }
 
 function isInNet6(parts, list, list2) {
-  var num = convertToInt(parts[0], parts[1]);
+  var num = convertToInt6(parts[0], parts[1]);
   var x = binarySearch(list, num, 0, list.length);
   
   if (list[x][1] == -1) 
-    return ((num & list[x][2]) === list[x][0]);
+    return (((num & list[x][2]) ^ list[x][0]) === 0);
   
   // not in net (/33 - /64)
   if (num !== list[x][0]) 
     return false;
   
-  var num2 = convertToInt(parts[2], parts[3]);
+  var num2 = convertToInt6(parts[2], parts[3]);
   var x2 = binarySearch(list2, num2, list[x][1], list[x][2] + 1);
   
-  return ((num2 & list2[x2][1]) === list2[x2][0]);
+  return (((num2 & list2[x2][1]) ^ list2[x2][0]) === 0);
 }
 
 function isLanOrChina6(host) {
-  if (host.indexOf("::") === -1) {
-    var groups = host.split(":");
+  var addr = host;
+  if (addr.indexOf("[") !== -1) {
+    addr = addr.substring(1, addr.length - 1);
+  }
+  
+  if (addr.indexOf("::") === -1) {
+    var groups = addr.split(":");
     if (groups.length != 8)
       return false; // invalid ipv6 format
     return isInNet6(groups, CHINA6_F, CHINA6_S) || isInNet6(groups, LAN6_F, LAN6_S);
   }
   
-  var halfs = host.split("::");
+  var halfs = addr.split("::");
   var left = halfs[0];
   var right = halfs[1];
   if (left.length < 1) left = "0000";
@@ -93,8 +91,14 @@ function isLanOrChina6(host) {
   return isInNet6(parts, CHINA6_F, CHINA6_S) || isInNet6(parts, LAN6_F, LAN6_S);
 }
 
+function convertToInt(host) {
+  var bytes = host.split(".");
+  var result = ((bytes[0] & 0xFF) << 24) | ((bytes[1] & 0xFF) << 16) | ((bytes[2] & 0xFF) <<  8) | (bytes[3] & 0xFF);
+  return (result >>> 0);
+}
+
 function belongsToSubnet(host, list) {
-  var ip = convert_addr(host) >>> 0;
+  var ip = convertToInt(host);
 
   if (list.length === 0 || ip < list[0][0])
     return false;
@@ -171,7 +175,7 @@ function FindProxyForURL(url, host) {
   }
 
   // Fallback to IP whitelist
-  
+
   // if host is IPv6
   if (host.indexOf(":") !== -1) {
     if (isLanOrChina6(host)) {
@@ -179,26 +183,26 @@ function FindProxyForURL(url, host) {
     }
     return proxy;
   }
-  
-  // default resolve IPv4
-  // var remote = dnsResolve(host);
-  // if (!remote) {
-  //   // resolution failed
-  //   return proxy;
-  // }
 
   // method for IPv6
-  var ips = dnsResolveEx(host);
-  if (!ips) 
-    return proxy;
-  var remote = ips.split(";")[0];
+  var remote = dnsResolveEx(host);
+  if (!remote) {
+    // fallback to legacy method
+    remote = dnsResolve(host);
+    if (!remote)
+      return proxy;
+  }
+  else {
+    remote = remote.split(";")[0];
+  }
+
   if (remote.indexOf(":") !== -1) {
     if (isLanOrChina6(remote)) {
       return direct;
     }
     return proxy;
   }
-  
+
   if (isLan(remote) || isChina(remote)) {
     return direct;
   }
