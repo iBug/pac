@@ -184,15 +184,16 @@ function FindProxyForURL(url, host) {
     return proxy;
   }
 
-  // method for IPv6
-  var remote = dnsResolveEx(host);
-  if (!remote) {
-    // fallback to legacy method
+  var remote;
+  if(typeof dnsResolveEx == 'function') {
+    remote = dnsResolveEx(host);
+  } else {
     remote = dnsResolve(host);
-    if (!remote)
-      return proxy;
   }
-  else {
+
+  if (!remote) {
+    return proxy;
+  } else {
     remote = remote.split(";")[0];
   }
 
