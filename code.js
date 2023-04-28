@@ -19,14 +19,14 @@ function binarySearch(list, num, lower, upper) {
   return x;
 }
 
-function convertToInt6(high, low) {
+function convertToUInt6(high, low) {
   var num1 = parseInt(high, 16) & 0xFFFF;
   var num2 = parseInt(low, 16) & 0xFFFF;
   return (((num1 << 16) | num2) >>> 0);
 }
 
 function isInNet6(parts, list, list2) {
-  var num = convertToInt6(parts[0], parts[1]);
+  var num = convertToUInt6(parts[0], parts[1]);
   var x = binarySearch(list, num, 0, list.length);
   
   if (list[x][1] == -1) 
@@ -36,7 +36,7 @@ function isInNet6(parts, list, list2) {
   if (num !== list[x][0]) 
     return false;
   
-  var num2 = convertToInt6(parts[2], parts[3]);
+  var num2 = convertToUInt6(parts[2], parts[3]);
   var x2 = binarySearch(list2, num2, list[x][1], list[x][2] + 1);
   
   return (((num2 & list2[x2][1]) ^ list2[x2][0]) === 0);
@@ -91,14 +91,14 @@ function isLanOrChina6(host) {
   return isInNet6(parts, CHINA6_F, CHINA6_S) || isInNet6(parts, LAN6_F, LAN6_S);
 }
 
-function convertToInt(host) {
+function convertToUInt(host) {
   var bytes = host.split(".");
   var result = ((bytes[0] & 0xFF) << 24) | ((bytes[1] & 0xFF) << 16) | ((bytes[2] & 0xFF) <<  8) | (bytes[3] & 0xFF);
   return (result >>> 0);
 }
 
 function belongsToSubnet(host, list) {
-  var ip = convertToInt(host);
+  var ip = convertToUInt(host);
 
   if (list.length === 0 || ip < list[0][0])
     return false;

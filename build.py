@@ -8,13 +8,15 @@ from requests.exceptions import RequestException, HTTPError
 
 import gfwlist
 
-
-SOURCES = {
+SOURCES_4 = {
     'ipdeny.com': 'http://www.ipdeny.com/ipblocks/data/aggregated/cn-aggregated.zone',
     '17mon': 'https://raw.githubusercontent.com/17mon/china_ip_list/master/china_ip_list.txt',
 }
-SOURCES2 = {
+SOURCES_6 = {
     'gaoyifan': 'https://gaoyifan.github.io/china-operator-ip/china6.txt',
+}
+SOURCES_46 = {
+    'maxmind': 'https://github.com/v2fly/geoip/raw/release/text/cn.txt',
 }
 OUT_DIR = "dist"
 
@@ -28,6 +30,8 @@ def fetch_and_convert(src):
     template = "var CHINA = [\n{}\n];\n"
     lines = []
     for iprange in response.text.strip().split("\n"):
+        if iprange.find(":") != -1:
+            break
         ipnet = ipaddress.IPv4Network(iprange)
         netaddr = int(ipnet.network_address)
         netmask = int(ipnet.netmask)
@@ -57,6 +61,8 @@ def fetch_and_convert_ip6(src):
     fixlen = len(f"  [0xFFFFFFFF, -1, 0xFFFFFFFF],")
 
     for iprange in text.strip().split("\n"):
+        if iprange.find(":") == -1:
+            continue
         ipnet = ipaddress.IPv6Network(iprange)
         prefixlen = ipnet.prefixlen
         fulladdr = str(ipnet.exploded).replace(':', '')
@@ -131,33 +137,61 @@ def main():
     gfwlist_stub = GFWLIST_STUB
 
     os.makedirs(OUT_DIR, mode=0o755, exist_ok=True)
-    for key in SOURCES:
-        print(f"Generating PAC script from source {key}")
+    for key in SOURCES_4:
+        key_6 = list(SOURCES_6)[0]
+        print(f"Generating PAC script from source {key}(IPv4) & {key_6}(IPv6)")
         try:
-            data = fetch_and_convert(SOURCES[key])
-            key2 = list(SOURCES2)[0]
-            data2 = fetch_and_convert_ip6(SOURCES2[key2])
+            data = fetch_and_convert(SOURCES_4[key])
+            data_6 = fetch_and_convert_ip6(SOURCES_6[key_6])
         except RequestException:
             continue
         except HTTPError:
             continue
 
-        filename = f"pac-{key}-{key2}.txt"
-        filename_gfwlist = f"pac-gfwlist-{key}-{key2}.txt"
+        filename = f"pac-IPv4_{key}--IPv6_{key_6}.txt"
+        filename_gfwlist = f"pac-gfwlist-IPv4_{key}--IPv6_{key_6}.txt"
         with open(os.path.join(OUT_DIR, filename), "w") as f:
             f.write(code)
             f.write(data)
             f.write("\n")
-            f.write(data2)
+            f.write(data_6)
             f.write("\n")
             f.write(gfwlist_stub)
         with open(os.path.join(OUT_DIR, filename_gfwlist), "w") as f:
             f.write(code)
             f.write(data)
             f.write("\n")
-            f.write(data2)
+            f.write(data_6)
             f.write("\n")
             f.write(gfwlist_part)
+
+    for key in SOURCES_46:
+        print(f"Generating PAC script from source {key}(IPv4v6)")
+        try:
+            data = fetch_and_convert(SOURCES_46[key])
+            data_6 = fetch_and_convert_ip6(SOURCES_46[key])
+        except RequestException:
+            continue
+        except HTTPError:
+            continue
+
+        filename = f"pac-IPv4v6_{key}.txt"
+        filename_gfwlist = f"pac-gfwlist-IPv4v6_{key}.txt"
+        with open(os.path.join(OUT_DIR, filename), "w") as f:
+            f.write(code)
+            f.write(data)
+            f.write("\n")
+            f.write(data_6)
+            f.write("\n")
+            f.write(gfwlist_stub)
+        with open(os.path.join(OUT_DIR, filename_gfwlist), "w") as f:
+            f.write(code)
+            f.write(data)
+            f.write("\n")
+            f.write(data_6)
+            f.write("\n")
+            f.write(gfwlist_part)
+
 
 
 if __name__ == '__main__':
