@@ -126,6 +126,16 @@ def fetch_and_convert_ip6(src):
     return template.format("\n".join(lines)) + template2.format("\n".join(lines2))
 
 
+def write_pac(filename, code, data, data_6, tail):
+    with open(os.path.join(OUT_DIR, filename), "w") as f:
+        f.write(code)
+        f.write(data)
+        f.write("\n")
+        f.write(data_6)
+        f.write("\n")
+        f.write(tail)
+
+
 def main():
     now = datetime.utcnow()
     date = now.strftime("%Y%m%d")
@@ -150,20 +160,8 @@ def main():
 
         filename = f"pac-IPv4_{key}--IPv6_{key_6}.txt"
         filename_gfwlist = f"pac-gfwlist-IPv4_{key}--IPv6_{key_6}.txt"
-        with open(os.path.join(OUT_DIR, filename), "w") as f:
-            f.write(code)
-            f.write(data)
-            f.write("\n")
-            f.write(data_6)
-            f.write("\n")
-            f.write(gfwlist_stub)
-        with open(os.path.join(OUT_DIR, filename_gfwlist), "w") as f:
-            f.write(code)
-            f.write(data)
-            f.write("\n")
-            f.write(data_6)
-            f.write("\n")
-            f.write(gfwlist_part)
+        write_pac(filename, code, data, data_6, gfwlist_stub)
+        write_pac(filename_gfwlist, code, data, data_6, gfwlist_part)
 
     for key in SOURCES_46:
         print(f"Generating PAC script from source {key}(IPv4v6)")
@@ -177,20 +175,8 @@ def main():
 
         filename = f"pac-IPv4v6_{key}.txt"
         filename_gfwlist = f"pac-gfwlist-IPv4v6_{key}.txt"
-        with open(os.path.join(OUT_DIR, filename), "w") as f:
-            f.write(code)
-            f.write(data)
-            f.write("\n")
-            f.write(data_6)
-            f.write("\n")
-            f.write(gfwlist_stub)
-        with open(os.path.join(OUT_DIR, filename_gfwlist), "w") as f:
-            f.write(code)
-            f.write(data)
-            f.write("\n")
-            f.write(data_6)
-            f.write("\n")
-            f.write(gfwlist_part)
+        write_pac(filename, code, data, data_6, gfwlist_stub)
+        write_pac(filename_gfwlist, code, data, data_6, gfwlist_part)
 
 
 
