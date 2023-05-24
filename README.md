@@ -4,11 +4,13 @@ PAC scripts for proxies
 
 ## 特点
 
-基于 IP 地址白名单设计，位于白名单中的 IP 地址走直连，白名单以外的 IP 地址走代理（暂不支持 IPv6）。
+基于 IP 地址白名单设计，位于白名单中的 IP 地址走直连，白名单以外的 IP 地址走代理。
 
 另有 GFWList 版本从 [gfwlist/gfwlist](https://github.com/gfwlist/gfwlist) 获取域名及 URL 列表，优先匹配列表中的黑白名单，有效防止 DNS 污染。
 
 每周六 12:00 (UTC) 会自动使用 GitHub Actions 运行[生成脚本](build.py)从数据源获取 IP 地址列表并生成 PAC 文件。
+
+本项目暂不支持 IPv6，有 IPv6 需求的用户请参见[由 @wits-fe 维护的 fork](https://github.com/wits-fe/pac)。
 
 ## 使用
 
