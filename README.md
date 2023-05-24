@@ -4,7 +4,7 @@ PAC scripts for proxies
 
 ## 特点
 
-基于 IP 地址白名单设计，位于白名单中的 IP 地址走直连，白名单以外的 IP 地址走代理（暂不支持 IPv6）。
+基于 IP 地址白名单设计，位于白名单中的 IP 地址走直连，白名单以外的 IP 地址走代理。
 
 另有 GFWList 版本从 [gfwlist/gfwlist](https://github.com/gfwlist/gfwlist) 获取域名及 URL 列表，优先匹配列表中的黑白名单，有效防止 DNS 污染。
 
@@ -12,7 +12,7 @@ PAC scripts for proxies
 
 ## 使用
 
-获取方式：[本仓库的 Releases](https://github.com/iBug/pac/releases/latest)
+获取方式：[本仓库的 Releases](https://github.com/wits-fe/pac/releases/latest)
 
 - `pac-<name>.txt` 包含从数据源 `<name>` 获取的 IP 地址列表（白名单）
 - `pac-gfwlist-<name>.txt` 在 IP 白名单的基础上添加了 GFWList 的匹配
