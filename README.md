@@ -14,7 +14,7 @@ PAC scripts for proxies
 
 ## 使用
 
-获取方式：[本仓库的 Releases](https://github.com/iBug/pac/releases/latest)
+获取方式：[本仓库的 Releases](https://github.com/wits-fe/pac/releases/latest)
 
 - `pac-<name>.txt` 包含从数据源 `<name>` 获取的 IP 地址列表（白名单）
 - `pac-gfwlist-<name>.txt` 在 IP 白名单的基础上添加了 GFWList 的匹配
